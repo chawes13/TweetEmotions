@@ -13,13 +13,15 @@ ambient.on('ready', function () {
     ambient.getSoundLevel( function(err, sounddata) {
       if (err) throw err;
 
-      if (sounddata > 0.05 ){
 
-        console.log('greater than 0.05', sounddata);
+      // if sound is higher than low Threshold
+      if (sounddata > lowThreshold && sounddata < highThreshold){
 
-      } else {
+        console.log('low Tweet', sounddata);
 
-        console.log('lower than 0.05', sounddata);
+      }if (sounddata > highThreshold){
+
+        console.log('loud Tweet', sounddata);
 
       }
     } );
