@@ -1,15 +1,32 @@
-'use strict';
-
-// Import the interface to Tessel hardware
 const tessel = require('tessel');
+const ambientlib = require('ambient-attx4');
 
-// Turn one of the LEDs on to start.
-tessel.led[2].on();
+const ambient = ambientlib.use(tessel.port.A);
+const lowThreshold = 0.03;
+const highThreshold = 0.05;
 
-// Blink!
-setInterval(() => {
-  tessel.led[2].toggle();
-  tessel.led[3].toggle();
-}, 100);
+ambient.on('ready', function () {
 
-console.log("I'm blinking! (Press CTRL + C to stop)");
+ // Get points of sound data.
+  setInterval( function () {
+
+    ambient.getSoundLevel( function(err, sounddata) {
+      if (err) throw err;
+
+      if (sounddata > 0.05 ){
+
+        console.log('greater than 0.05', sounddata);
+
+      } else {
+
+        console.log('lower than 0.05', sounddata);
+
+      }
+    } );
+
+  }, 500); // The readings will happen every .5 seconds
+});
+
+ambient.on('error', function (err) {
+  console.log(err);
+});
